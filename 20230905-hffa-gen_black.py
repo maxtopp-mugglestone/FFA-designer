@@ -4,7 +4,36 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider, Button
 
 
-class mag:
+class Mag:
+    '''
+    Magnet object for an hFFA lattice
+    
+    Attributes
+    ----------
+    k : float
+        Field index k in terms of hFFA scaling law (r/r0)**k
+    rho : float
+        Radius of curvature of beam within magnet (units metres)
+    rin : float
+        Radius of closed orbit at entrance of element with respect to machine centre (units metres)
+    rout : float
+        Radius of closed orbit at exit of element with respect to machine centre (units metres)
+    theta : float
+        Angle of curvature within magnet (units radians)
+    beta : float
+        Opening angle of element with respect to machine centre (units radians)
+    centre : float
+        Azimuthal position of element centre with respect to machine centre (units radians)
+
+    Properties
+    ----------
+    tM : 
+        Returns 4x4 array corresponding to the transfer matrix of the element
+    plotTraj : 
+        Returns 2d numpy array of coordinates along trajectory of beam through element
+    plotRs :
+        Returns 2d numpy array with coordinates of start and end point of trajectory through element
+    '''
     def __init__(self, k, rho, rin, rout, theta, beta, centre, fl, spi):
         self.k = k
         self.rho = rho
@@ -169,10 +198,10 @@ class fodoLattice:
     @property
     def elements(self):
         r1, r2, r3, tD, rhoF, rhoD = self.vars
-        fMag = mag(
+        fMag = Mag(
             self.k, rhoF, self.r0, r1, self.tF, self.BF, self.BF / 2, self.ffl, self.spi
         )
-        fMag2 = mag(
+        fMag2 = Mag(
             self.k,
             rhoF,
             r1,
@@ -183,7 +212,7 @@ class fodoLattice:
             self.ffl,
             self.spi,
         )
-        dMag = mag(
+        dMag = Mag(
             self.k, -rhoD, r2, r2, tD * 2, self.BD * 2, self.tC / 2, self.dfl, self.spi
         )
         lDrift = (
@@ -262,10 +291,10 @@ class tripletLattice:
     @property
     def elements(self):
         r1, r2, r3, tD, rhoF, rhoD = self.vars
-        fMag = mag(
+        fMag = Mag(
             self.k, rhoF, self.r0, r1, self.tF, self.BF, self.BF / 2, self.ffl, self.spi
         )
-        dMag = mag(
+        dMag = Mag(
             self.k,
             -rhoD,
             r1,
@@ -278,7 +307,7 @@ class tripletLattice:
         )
         lDrift = r2 * np.sin(np.pi / self.Nc - self.BF - self.BD)
         cdrift = drift(lDrift, self.BF + self.BD, self.tC / 2, r2, r3)
-        fMag2 = mag(
+        fMag2 = Mag(
             self.k,
             rhoF,
             r1,
@@ -289,7 +318,7 @@ class tripletLattice:
             self.ffl,
             self.spi,
         )
-        dMag2 = mag(
+        dMag2 = Mag(
             self.k,
             -rhoD,
             r2,
