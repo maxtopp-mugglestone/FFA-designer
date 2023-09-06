@@ -3,4 +3,10 @@ Interactive FFA design script v1.0
 Dependencies: 
   Python 3 (tested with python 3.7.5)
   Numpy 
-  Matplotlib (for interactive GUI script_
+  Matplotlib (for interactive GUI script)
+
+Files:
+  ffa.py :
+    script containing objects and functions needed to evaluate FFA physics
+  interactive-gui.py :
+    script to display lattices and properties and interactively adjust parameters
