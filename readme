@@ -1,0 +1,6 @@
+Interactive FFA design script v1.0
+
+Dependencies: 
+  Python 3 (tested with python 3.7.5)
+  Numpy 
+  Matplotlib (for interactive GUI script_
