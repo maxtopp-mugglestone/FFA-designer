@@ -168,7 +168,7 @@ q = ffa.tune(Latt)
 sspace = 0.04
 R_ax = fig.add_axes([sspace, 0.25, 0.0225, 0.63])
 R_slider = Slider(
-    ax=R_ax, label="r0", valmin=0, valmax=100, valinit=r0, orientation="vertical"
+    ax=R_ax, label="r0", valmin=0, valmax=50, valinit=r0, orientation="vertical"
 )
 R_slider.on_changed(r0_update)
 
@@ -189,7 +189,7 @@ Nc_slider = Slider(
     ax=Nc_ax,
     label="Nc",
     valmin=1,
-    valmax=100,
+    valmax=64,
     valstep=allowed_Nc,
     valinit=Nc,
     orientation="vertical",
@@ -198,13 +198,13 @@ Nc_slider.on_changed(Nc_update)
 
 bf_ax = fig.add_axes([sspace * 4, 0.25, 0.0225, 0.63])
 bf_slider = Slider(
-    ax=bf_ax, label="BF", valmin=0, valmax=90, valinit=bf, orientation="vertical"
+    ax=bf_ax, label="BF", valmin=0, valmax=45/2, valinit=bf, orientation="vertical"
 )
 bf_slider.on_changed(bf_update)
 
 bd_ax = fig.add_axes([sspace * 5, 0.25, 0.0225, 0.63])
 bd_slider = Slider(
-    ax=bd_ax, label="BD", valmin=0, valmax=90, valinit=bd, orientation="vertical"
+    ax=bd_ax, label="BD", valmin=0, valmax=45/2, valinit=bd, orientation="vertical"
 )
 bd_slider.on_changed(bd_update)
 
