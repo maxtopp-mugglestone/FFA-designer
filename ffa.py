@@ -329,6 +329,13 @@ class FodoLattice:
         dMag = Mag(
             self.k, -rhoD, r2, r2, tD * 2, self.BD * 2, self.tC / 2, self.dfl, self.spi
         )
+        
+        dMag1 = Mag(
+            self.k, -rhoD, r2, r3, tD * 2, self.BD, self.tC / 2 - self.BD/2, self.dfl, self.spi
+        )
+        dMag2 = Mag(
+            self.k, -rhoD, r3, r2, tD * 2, self.BD, self.tC / 2 + self.BD/2, self.dfl, self.spi
+        )
         lDrift = (
             r2 * np.sin(np.pi / self.Nc - self.BF - self.BD) / np.cos(self.tF - self.BF)
         )
@@ -341,7 +348,8 @@ class FodoLattice:
             Drift1,
             Fringe(tD + self.BD, rhoD, r2, self.dfl, self.k),
             Edge(tD + self.BD, rhoD),
-            dMag,
+            dMag1,
+            dMag2,
             Edge(tD + self.BD, rhoD),
             Fringe(tD + self.BD, rhoD, r3, self.dfl, self.k),
             Drift2,
