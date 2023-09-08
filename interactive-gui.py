@@ -102,7 +102,19 @@ def draw_latt():
     trajLine.set_ydata(tData[:, 0])
     rLine.set_xdata(rData[:, 1])
     rLine.set_ydata(rData[:, 0])
+    update_text()
     fig.canvas.draw_idle()
+
+def update_text():
+    vars = Latt.vars
+    rho_f.set_text(r"$\rho_F = {:03f}$".format(Latt.vars[4]))
+    rho_d.set_text(r"$\rho_D = {:03f}$".format(Latt.vars[5]))
+    r_1.set_text(r"$r_1 = {:03f}$".format(Latt.vars[0]))
+    r_2.set_text(r"$r_2 = {:03f}$".format(Latt.vars[1]))
+    r_3.set_text(r"$r_3 = {:03f}$".format(Latt.vars[2]))
+    t_d.set_text(r"$\theta_D = {:03f}$".format(Latt.vars[3]))
+
+
 
 
 #Generate figure with two side-by-side subplots.
@@ -168,7 +180,7 @@ q = ffa.tune(Latt)
 sspace = 0.04
 R_ax = fig.add_axes([sspace, 0.25, 0.0225, 0.63])
 R_slider = Slider(
-    ax=R_ax, label="r0", valmin=0, valmax=50, valinit=r0, orientation="vertical"
+    ax=R_ax, label="r0", valmin=0, valmax=25, valinit=r0, orientation="vertical"
 )
 R_slider.on_changed(r0_update)
 
@@ -226,6 +238,29 @@ tr_x = fig.text(
 )
 tr_y = fig.text(
     0.05, 0.1, "$Tr[M_y] = {:03f}$".format(np.real(np.trace(Latt.tMatrix[2:, 2:])))
+)
+
+#write radius of curvature
+rho_f = fig.text(
+    0.15, 0.15, r"$\rho_F = {:03f}$".format(Latt.vars[4])
+)
+rho_d = fig.text(
+    0.15, 0.1, r"$\rho_D = {:03f}$".format(Latt.vars[5])
+)
+
+
+#write radius of curvature
+r_1 = fig.text(
+    0.25, 0.15, r"$r_1 = {:03f}$".format(Latt.vars[0])
+)
+r_2 = fig.text(
+    0.25, 0.1, r"$r_2 = {:03f}$".format(Latt.vars[1])
+)
+r_3 = fig.text(
+    0.35, 0.15, r"$r_3 = {:03f}$".format(Latt.vars[2])
+)
+t_d = fig.text(
+    0.35, 0.1, r"$\theta_D = {:03f}$".format(Latt.vars[3])
 )
 
 #write tune of lattice
