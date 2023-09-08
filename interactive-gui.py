@@ -112,7 +112,7 @@ def update_text():
     r_1.set_text(r"$r_1 = {:03f}$".format(Latt.vars[0]))
     r_2.set_text(r"$r_2 = {:03f}$".format(Latt.vars[1]))
     r_3.set_text(r"$r_3 = {:03f}$".format(Latt.vars[2]))
-    t_d.set_text(r"$\theta_D = {:03f}$".format(Latt.vars[3]))
+    t_d.set_text(r"$\theta_D = {:03f}^\circ$".format(np.degrees(Latt.vars[3])))
 
 
 
@@ -260,7 +260,7 @@ r_3 = fig.text(
     0.35, 0.15, r"$r_3 = {:03f}$".format(Latt.vars[2])
 )
 t_d = fig.text(
-    0.35, 0.1, r"$\theta_D = {:03f}$".format(Latt.vars[3])
+    0.35, 0.1, r"$\theta_D = {:03f}^\circ$".format(np.degrees(Latt.vars[3]))
 )
 
 #write tune of lattice
