@@ -106,13 +106,12 @@ def draw_latt():
     fig.canvas.draw_idle()
 
 def update_text():
-    vars = Latt.vars
-    rho_f.set_text(r"$\rho_F = {:03f}$".format(Latt.vars[4]))
-    rho_d.set_text(r"$\rho_D = {:03f}$".format(Latt.vars[5]))
-    r_1.set_text(r"$r_1 = {:03f}$".format(Latt.vars[0]))
-    r_2.set_text(r"$r_2 = {:03f}$".format(Latt.vars[1]))
-    r_3.set_text(r"$r_3 = {:03f}$".format(Latt.vars[2]))
-    t_d.set_text(r"$\theta_D = {:03f}^\circ$".format(np.degrees(Latt.vars[3])))
+    rho_f.set_text(r"$\rho_F = {:03f}$".format(Latt.rhoF))
+    rho_d.set_text(r"$\rho_D = {:03f}$".format(Latt.rhoD))
+    r_1.set_text(r"$r_1 = {:03f}$".format(Latt.r1))
+    r_2.set_text(r"$r_2 = {:03f}$".format(Latt.r2))
+    r_3.set_text(r"$r_3 = {:03f}$".format(Latt.r3))
+    t_d.set_text(r"$\theta_D = {:03f}^\circ$".format(np.degrees(Latt.tD)))
 
 
 
@@ -242,25 +241,25 @@ tr_y = fig.text(
 
 #write radius of curvature
 rho_f = fig.text(
-    0.15, 0.15, r"$\rho_F = {:03f}$".format(Latt.vars[4])
+    0.15, 0.15, r"$\rho_F = {:03f}$".format(Latt.rhoF)
 )
 rho_d = fig.text(
-    0.15, 0.1, r"$\rho_D = {:03f}$".format(Latt.vars[5])
+    0.15, 0.1, r"$\rho_D = {:03f}$".format(Latt.rhoD)
 )
 
 
 #write radius of curvature
 r_1 = fig.text(
-    0.25, 0.15, r"$r_1 = {:03f}$".format(Latt.vars[0])
+    0.25, 0.15, r"$r_1 = {:03f}$".format(Latt.r1)
 )
 r_2 = fig.text(
-    0.25, 0.1, r"$r_2 = {:03f}$".format(Latt.vars[1])
+    0.25, 0.1, r"$r_2 = {:03f}$".format(Latt.r2)
 )
 r_3 = fig.text(
-    0.35, 0.15, r"$r_3 = {:03f}$".format(Latt.vars[2])
+    0.35, 0.15, r"$r_3 = {:03f}$".format(Latt.r3)
 )
 t_d = fig.text(
-    0.35, 0.1, r"$\theta_D = {:03f}^\circ$".format(np.degrees(Latt.vars[3]))
+    0.35, 0.1, r"$\theta_D = {:03f}^\circ$".format(np.degrees(Latt.tD))
 )
 
 #write tune of lattice
