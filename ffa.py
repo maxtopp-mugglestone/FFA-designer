@@ -45,10 +45,10 @@ class Mag:
 
     @property
     def tM(self):
-        r = (self.rin + self.rout) / 2
-        wx = np.emath.sqrt((1 / self.rho) * (1 / self.rho + self.k / r))
-        wz = np.emath.sqrt(self.k / (self.rho * r))
-        L = np.abs(self.theta * self.rho)
+        r = (self.rin + self.rout) / 2 #average radius within element
+        wx = np.emath.sqrt((1 / self.rho) * (1 / self.rho + self.k / r)) #compute omega in the x-plane (horizontal)
+        wz = np.emath.sqrt(self.k / (self.rho * r)) #compute omega in the z-plane (vertical)
+        L = np.abs(self.theta * self.rho) #compute element length
         tM = np.array(
             [
                 [np.cos(wx * L), np.sin(wx * L) / wx, 0, 0],
@@ -57,7 +57,7 @@ class Mag:
                 [0, 0, wz * np.sinh(wz * L), np.cosh(wz * L)],
             ]
         )
-        return tM
+        return tM #return transfer matrix
 
     @property
     def plotTraj(self):
@@ -169,11 +169,11 @@ class Fringe:
 
     @property
     def plotTraj(self):
-        return np.empty(0), np.empty(0)
+        return np.empty(0), np.empty(0) #element of zero length - return empty
 
     @property
     def plotRs(self):
-        return np.zeros([2, 2])
+        return np.zeros([2, 2]) # return points on origin
 
 
 class Drift:
@@ -388,6 +388,7 @@ class FodoLattice:
         lDrift = self.lD
         Drift1 = Drift(lDrift, self.BF, self.tC / 2 - self.BD, r1, r2)
         Drift2 = Drift(lDrift, self.tC - self.BF, self.tC / 2 + self.BD, r1, r2)
+        #generate list of components in lattice, beginning in centre of F-magnet
         return [
             fMag,
             Edge(self.tF - self.BF, rhoF),
@@ -602,6 +603,7 @@ class TripletLattice:
             self.spi,
         )
         cdrift2 = Drift(lDrift, self.tC / 2, self.tC - self.BF - self.BD, r3, r2)
+        #generate list of components in lattice, beginning in centre of F-magnet
         return [
             fMag,
             Edge(self.tF - self.BF, rhoF),

@@ -62,8 +62,16 @@ def qUpdate():
 
     tr_x.set_text("$Tr[M_x] = {:03f}$".format(np.real(np.trace(Latt.tMatrix[:2, :2]))))
     tr_y.set_text("$Tr[M_y] = {:03f}$".format(np.real(np.trace(Latt.tMatrix[2:, 2:]))))
-    q_x.set_text("$q_x = {:03f}$".format(q[0]))
-    q_y.set_text("$q_y = {:03f}$".format(q[2]))
+
+    if (0.5-1e-5)>np.abs(q[0])>1e-5:
+        q_x.set_text("$q_x = {:03f}$".format(q[0]))
+    else:
+        q_x.set_text("$q_x$ unstable")
+
+    if (0.5-1e-5)>np.abs(q[2])>1e-5:
+        q_y.set_text("$q_y = {:03f}$".format(q[2]))
+    else:
+        q_y.set_text("$q_y$ unstable")
 
 
 def toggle(self):
@@ -92,6 +100,17 @@ def toggle(self):
         btog.label.set_text("FODO")
     draw_latt()
     qUpdate()
+
+
+def reset(self):
+    #Function to reset if you messed everything up 
+    global Latt
+    Latt = ffa.FodoLattice([Nc, r0, np.radians(bf), np.radians(bd), np.radians(tf)], k, 0, 0, 0)
+    draw_latt()
+    qUpdate()
+    update_text()
+    ax[0].set_xlim([-0.1, r0 * 1.1])
+    ax[0].set_ylim([-0.1, r0 * 1.1])
 
 
 def draw_latt():
@@ -227,9 +246,15 @@ k_slider = Slider(
 k_slider.on_changed(k_update)
 
 #add button to toggle between FODO and triplet lattices
-axtog = fig.add_axes([0.7, 0.1, 0.1, 0.075])
+axtog = fig.add_axes([0.55, 0.1, 0.1, 0.075])
 btog = Button(axtog, "FODO")
 btog.on_clicked(toggle)
+
+#add reset button
+axres = fig.add_axes([0.75, 0.1, 0.075, 0.075])
+bres = Button(axres, "RESET", color = 'red')
+bres.label.set_color("white")
+bres.on_clicked(reset)
 
 #write trace of 2d transfer matrices
 tr_x = fig.text(
@@ -265,6 +290,9 @@ t_d = fig.text(
 #write tune of lattice
 q_x = fig.text(0.85, 0.15, "$q_x = {:03f}$".format(q[0]))
 q_y = fig.text(0.85, 0.1, "$q_y = {:03f}$".format(q[2]))
+
+ax[0].set_title("Closed orbit")
+ax[1].set_title("Machine tune")
 
 #display plot in interactive window
 plt.show()
