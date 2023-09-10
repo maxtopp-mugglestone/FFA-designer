@@ -264,14 +264,20 @@ class FodoLattice:
     ----------
     tC : 
         returns float corresponding to cell opening angle
-    vars : 
-        returns r1, r2, r3, tD, rhoF, rhoD
-            r1 : orbit radius at exit of F-magnet
-            r2 : orbit radius at entrance of D-magnet
-            r3 : orbit radius at centre of D-magnet (boundary of half-cell)
-            tD : bending angle in D-magnet
-            rhoF : bending radius in F-magnet
-            rhoD : bending radius in D-magnet
+    r1 : 
+        orbit radius at exit of F-magnet
+    r2 :
+        orbit radius at entrance of D-magnet
+    r3 : 
+        orbit radius at centre of D-magnet (boundary of half-cell)
+    tD : 
+        bending angle in D-magnet
+    rhoF : 
+        bending radius in F-magnet
+    rhoD : 
+        bending radius in D-magnet
+    lD : 
+        length of drift between magnets
     elements:
         Returns list of objects corresponding to each element in the cell.
         List is returned beginning in the middle of the F-magnet.
@@ -291,27 +297,74 @@ class FodoLattice:
         return 2 * np.pi / self.Nc
 
     @property
-    def vars(self):
+    def rhoF(self):
         BF = self.BF
-        BD = self.BD
         tF = self.tF
         r0 = self.r0
-        Nc = self.Nc
         rhoF = np.tan(BF) / (np.sin(tF) + (1 - np.cos(tF)) * np.tan(BF)) * r0
+        return rhoF
+
+    @property
+    def tD(self):
+        Nc = self.Nc
         tD = self.tF - np.pi / Nc
+        return tD
+
+    @property 
+    def r1(self):
+        rhoF = self.rhoF
+        tF = self.tF
+        BF = self.BF
         r1 = rhoF * np.sin(tF) / np.sin(BF)
+        return r1
+
+    @property
+    def r2(self):
+        tF = self.tF
+        BF = self.BF
+        r1 = self.r1
+        BD = self.BD
+        Nc = self.Nc
         r2 = (
-            r1
-            * (np.cos(BF) + np.tan(tF) * np.sin(BF))
-            / (np.cos(np.pi / Nc - BD) + np.tan(tF) * np.sin(np.pi / Nc - BD))
-        )
+                r1
+                * (np.cos(BF) + np.tan(tF) * np.sin(BF))
+                / (np.cos(np.pi / Nc - BD) + np.tan(tF) * np.sin(np.pi / Nc - BD))
+            )    
+        return r2
+
+    @property
+    def rhoD(self):
+        r2 = self.r2
+        BD = self.BD
+        tD = self.tD
         rhoD = r2 * np.sin(BD) / np.sin(tD)
+        return rhoD
+
+    @property 
+    def r3(self):
+        r2 = self.r2
+        rhoD = self.rhoD
+        tD = self.tD
+        BD = self.BD
         r3 = r2 * np.cos(BD) - rhoD * (1 - np.cos(tD))
-        return r1, r2, r3, tD, rhoF, rhoD
+        return r3
+
+    @property
+    def lD(self):
+        r2 = self.r2
+        lD = (
+            r2 * np.sin(np.pi / self.Nc - self.BF - self.BD) / np.cos(self.tF - self.BF)
+        )
+        return lD
 
     @property
     def elements(self):
-        r1, r2, r3, tD, rhoF, rhoD = self.vars
+        r1 = self.r1
+        r2 = self.r2
+        r3 = self.r3
+        rhoF = self.rhoF
+        rhoD = self.rhoD
+        tD = self.tD
         fMag = Mag(
             self.k, rhoF, self.r0, r1, self.tF, self.BF, self.BF / 2, self.ffl, self.spi
         )
@@ -325,20 +378,14 @@ class FodoLattice:
             self.tC - self.BF / 2,
             self.ffl,
             self.spi,
-        )
-        dMag = Mag(
-            self.k, -rhoD, r2, r2, tD * 2, self.BD * 2, self.tC / 2, self.dfl, self.spi
-        )
-        
+        )        
         dMag1 = Mag(
             self.k, -rhoD, r2, r3, tD * 2, self.BD, self.tC / 2 - self.BD/2, self.dfl, self.spi
         )
         dMag2 = Mag(
             self.k, -rhoD, r3, r2, tD * 2, self.BD, self.tC / 2 + self.BD/2, self.dfl, self.spi
         )
-        lDrift = (
-            r2 * np.sin(np.pi / self.Nc - self.BF - self.BD) / np.cos(self.tF - self.BF)
-        )
+        lDrift = self.lD
         Drift1 = Drift(lDrift, self.BF, self.tC / 2 - self.BD, r1, r2)
         Drift2 = Drift(lDrift, self.tC - self.BF, self.tC / 2 + self.BD, r1, r2)
         return [
@@ -402,14 +449,20 @@ class TripletLattice:
     ----------
     tC : 
         returns float corresponding to cell opening angle
-    vars : 
-        returns r1, r2, r3, tD, rhoF, rhoD
-            r1 : orbit radius at exit of F-magnet/entrance of D-magnet
-            r2 : orbit radius at exit of D-magnet
-            r3 : orbit radius at boundary of half-cell (centre of drift)
-            tD : bending angle in D-magnet
-            rhoF : bending radius in F-magnet
-            rhoD : bending radius in D-magnet
+    r1 : 
+        orbit radius at exit of F-magnet/entrance of D-magnet
+    r2 : 
+        orbit radius at exit of D-magnet
+    r3 : 
+        orbit radius at boundary of half-cell (centre of drift)
+    tD : 
+        bending angle in D-magnet
+    rhoF : 
+        bending radius in F-magnet
+    rhoD : 
+        bending radius in D-magnet
+    lD : 
+        length of drift between triplets
     elements:
         Returns list of objects corresponding to each element in the cell.
         List is returned beginning in the middle of the F-magnet.
@@ -429,15 +482,35 @@ class TripletLattice:
         return 2 * np.pi / self.Nc
 
     @property
-    def vars(self):
+    def rhoF(self):
+        BF = self.BF
+        tF = self.tF
+        r0 = self.r0
+        rhoF = np.tan(BF) / (np.sin(tF) + (1 - np.cos(tF)) * np.tan(BF)) * r0
+        return rhoF
+    
+    @property
+    def tD(self):
+        tF = self.tF
+        Nc = self.Nc
+        tD = tF - np.pi / Nc
+        return tD
+
+    @property
+    def r1(self):
+        BF = self.BF
+        tF = self.tF
+        rhoF = self.rhoF
+        r1 = rhoF * np.sin(tF) / np.sin(BF)
+        return r1
+
+    @property
+    def rhoD(self):
         BF = self.BF
         BD = self.BD
         tF = self.tF
-        r0 = self.r0
         Nc = self.Nc
-        rhoF = np.tan(BF) / (np.sin(tF) + (1 - np.cos(tF)) * np.tan(BF)) * r0
-        tD = tF - np.pi / Nc
-        r1 = rhoF * np.sin(tF) / np.sin(BF)
+        rhoF = self.rhoF
         rhoD = (
             rhoF
             * np.sin(tF)
@@ -451,17 +524,46 @@ class TripletLattice:
                 - (1 - np.cos(tF - np.pi / Nc)) * np.tan(np.pi / Nc - BF - BD)
             )
         )
+        return rhoD
+        
+    @property
+    def r2(self):
+        BF = self.BF
+        BD = self.BD
+        Nc = self.Nc
+        rhoD = self.rhoD
+        r1 = self.r1
+        tD = self.tD
         r2 = (
             r1 * np.cos(BF)
             - rhoD * np.sin(tD) * np.sin(np.pi / Nc)
             - rhoD * (1 - np.cos(tD)) * np.cos(np.pi / Nc)
         ) / np.cos(BF + BD)
+        return r2
+
+    @property
+    def r3(self):
+        r2 = self.r2
+        Nc = self.Nc
+        BF = self.BF
+        BD = self.BD
         r3 = r2 * np.cos(np.pi / Nc - BF - BD)
-        return r1, r2, r3, tD, rhoF, rhoD
+        return r3
+
+    @property
+    def lD(self):
+        lD = self.r2 * np.sin(np.pi / self.Nc - self.BF - self.BD)
+        return lD
 
     @property
     def elements(self):
-        r1, r2, r3, tD, rhoF, rhoD = self.vars
+        r1 = self.r1
+        r2 = self.r2
+        r3 = self.r3
+        rhoF = self.rhoF
+        rhoD = self.rhoD
+        tD = self.tD
+        lDrift = self.lD
         fMag = Mag(
             self.k, rhoF, self.r0, r1, self.tF, self.BF, self.BF / 2, self.ffl, self.spi
         )
@@ -476,7 +578,6 @@ class TripletLattice:
             self.dfl,
             self.spi,
         )
-        lDrift = r2 * np.sin(np.pi / self.Nc - self.BF - self.BD)
         cdrift = Drift(lDrift, self.BF + self.BD, self.tC / 2, r2, r3)
         fMag2 = Mag(
             self.k,
