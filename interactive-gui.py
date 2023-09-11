@@ -292,7 +292,7 @@ q_x = fig.text(0.85, 0.15, "$q_x = {:03f}$".format(q[0]))
 q_y = fig.text(0.85, 0.1, "$q_y = {:03f}$".format(q[2]))
 
 ax[0].set_title("Closed orbit")
-ax[1].set_title("Machine tune")
+ax[1].set_title("Fractional tune")
 
 #display plot in interactive window
 plt.show()
