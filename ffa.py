@@ -53,7 +53,7 @@ class Mag:
             [
                 [np.cos(wx * L), np.sin(wx * L) / wx, 0, 0],
                 [-wx * np.sin(wx * L), np.cos(wx * L), 0, 0],
-                [0, 0, np.cosh(wx * L), np.sinh(wz * L) / wz],
+                [0, 0, np.cosh(wz * L), np.sinh(wz * L) / wz],
                 [0, 0, wz * np.sinh(wz * L), np.cosh(wz * L)],
             ]
         )
